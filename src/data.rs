@@ -2,39 +2,39 @@ use serde::Deserialize;
 use serde_json;
 use std::fs;
 
-#[derive(Deserialize)]
+#[derive(Deserialize, Debug)]
 pub struct VrttaData {
-    comment: Vec<String>,
-    metres: Vec<Vrtta>,
+    pub comment: Vec<String>,
+    pub metres: Vec<Vrtta>,
 }
 
-#[derive(Clone, Deserialize)]
-struct Vrtta {
-    name: String,
-    pattern: StringOrList,
+#[derive(Clone, Deserialize, Debug)]
+pub struct Vrtta {
+    pub name: String,
+    pub pattern: StringOrList,
 }
 
-#[derive(Clone, Deserialize)]
+#[derive(Clone, Deserialize, Debug)]
 pub struct MatraData {
-    comment: Vec<String>,
-    metres: Vec<Matra>,
+    pub comment: Vec<String>,
+    pub metres: Vec<Matra>,
 }
 
 #[derive(Clone, Deserialize, Debug)]
-struct Matra {
-    name: String,
-    pattern: MData,
+pub struct Matra {
+    pub name: String,
+    pub pattern: MData,
 }
 
 #[derive(Clone, Deserialize, Debug)]
-struct MData {
-    regex: Vec<String>,
-    comment: String,
+pub struct MData {
+    pub regex: Vec<String>,
+    pub comment: String,
 }
 
-#[derive(Debug, Deserialize, Clone)]
+#[derive(Deserialize, Clone, Debug)]
 #[serde(untagged)]
-enum StringOrList {
+pub enum StringOrList {
     String(String),
     List(Vec<String>),
 }

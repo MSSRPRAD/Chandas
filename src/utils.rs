@@ -2,7 +2,6 @@ use crate::process::clean;
 use crate::scheme::find_scheme;
 use lazy_static::lazy_static;
 type Sound = char;
-
 //hrasva Vowels
 const HRASVA: &str = "aiufx";
 //dIrgha Vowels
@@ -15,17 +14,17 @@ const OTHERS: &str = "MH";
 const SANSKRIT: &str = "aAiIuUfFxXeEoOMHkKgGNcCjJYwWqQRtTdDnpPbBmyrlvSzshL";
 #[derive(Debug)]
 pub struct Input {
-    PadaOne: Option<String>,
-    PadaTwo: Option<String>,
-    PadaThree: Option<String>,
-    PadaFour: Option<String>,
-    SchemeOne: Option<String>,
-    SchemeTwo: Option<String>,
-    SchemeThree: Option<String>,
-    SchemeFour: Option<String>,
-    SchemeOneTwo: Option<String>,
-    SchemeThreeFour: Option<String>,
-    SchemeAll: Option<String>,
+    pub PadaOne: Option<String>,
+    pub PadaTwo: Option<String>,
+    pub PadaThree: Option<String>,
+    pub PadaFour: Option<String>,
+    pub SchemeOne: Option<String>,
+    pub SchemeTwo: Option<String>,
+    pub SchemeThree: Option<String>,
+    pub SchemeFour: Option<String>,
+    pub SchemeOneTwo: Option<String>,
+    pub SchemeThreeFour: Option<String>,
+    pub SchemeAll: Option<String>,
 }
 
 impl Input {
@@ -109,25 +108,63 @@ impl Input {
         count
     }
 }
-
+#[derive(Debug)]
 pub enum IdentifyParams {
     IdentifyAnushtup,
     IdentifyMatra,
-    IdentifySamaVrtta,
-    IdentifyArdhaSamaVrtta,
+    IdentifyVrtta,
     IdentifyAll,
 }
-
+#[derive(Debug)]
 pub enum UseParams {
     UseExact,
     UseMerged,
 }
-
+#[derive(Debug)]
 pub enum SearchParams {
     SearchFuzzy,
     SearchExact,
 }
 
+#[derive(Debug)]
+pub struct Params {
+    pub identify_params: IdentifyParams,
+    pub use_params: UseParams,
+    pub search_params: SearchParams,
+}
+
+impl Params {
+    pub fn new(
+        identify_params: IdentifyParams,
+        use_params: UseParams,
+        search_params: SearchParams,
+    ) -> Params {
+        Params {
+            identify_params,
+            use_params,
+            search_params,
+        }
+    }
+}
+
+#[derive(Debug, Eq, PartialEq)]
+pub struct IdentifyResult {
+    pub name: String,
+    pub description: String,
+    pub similarity: usize,
+    pub actual: Vec<String>,
+    pub input: Vec<String>,
+}
+impl Ord for IdentifyResult {
+    fn cmp(&self, other: &Self) -> std::cmp::Ordering {
+        other.similarity.cmp(&self.similarity) // Reverse ordering for BinaryHeap
+    }
+}
+impl PartialOrd for IdentifyResult {
+    fn partial_cmp(&self, other: &Self) -> Option<std::cmp::Ordering> {
+        Some(self.cmp(other))
+    }
+}
 // A set of Sanskrit sounds.
 //
 // This implementation is copied directly from `vidyut_prakriya::sounds`. For details, see the

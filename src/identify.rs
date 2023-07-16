@@ -4,7 +4,116 @@
 /// 2) Take the scheme of the input verse as the input and
 ///     check against the data for the metre
 extern crate levenshtein;
-// use crate::scheme::Metre;
+use levenshtein::levenshtein;
+use crate::data::{VrttaData, StringOrList, Vrtta};
+use crate::utils::{IdentifyResult, Input, Params, UseParams, SearchParams};
+// use crate::scheme::Me
+use std::collections::BinaryHeap;
+
+fn get_actual(string_or_list: StringOrList) -> Vec<String> {
+    match string_or_list {
+        StringOrList::String(s) => vec![s; 4], // Repeat the string four times
+        StringOrList::List(list) => {
+            match list.len() {
+                1 => vec![list[0].clone(); 4], // Repeat the single string four times
+                2 => {
+                    let mut actual = Vec::new();
+                    for _ in 0..2 {
+                        actual.push(list[0].clone());
+                        actual.push(list[1].clone());
+                    }
+                    actual // Return the 4-row array from the two strings used twice
+                }
+                4 => list, // Return the original list of 4 strings
+                _ => panic!("Invalid input: List must contain either 1, 2, or 4 strings"),
+            }
+        }
+    }
+}
+
+pub fn matches_fuzzy_vrtta(metre: Vrtta, input: Input, use_param: UseParams ) -> IdentifyResult {
+    match use_param {
+        UseParams::UseExact => {
+            let similarity = 0;
+            let actual = get_actual(metre.pattern);
+            let mut inp = Vec::new();
+            if let Some(pada1) = input.PadaOne {
+                similarity += levenshtein(&actual[0], &pada1);
+                inp.push(pada1);
+            }
+
+            if let Some(pada2) = input.PadaTwo {
+                similarity += levenshtein(&actual[1], &pada2);
+                inp.push(pada2);
+            }
+
+            if let Some(pada3) = input.PadaThree {
+                similarity += levenshtein(&actual[2], &pada3);
+                inp.push(pada3);
+            }
+
+            if let Some(pada4) = input.PadaFour {
+                similarity += levenshtein(&actual[3], &pada4);
+                inp.push(pada4);
+            }
+
+            return IdentifyResult {
+                name: metre.name,
+                description: "todo!()".to_string(),
+                similarity: similarity,
+                actual: actual,
+                input: inp,
+            };
+        },
+        UseParams::UseMerged => {
+            let actual = get_actual(metre.pattern);
+            if let Some(pada) = input.PadaOneTwo {
+
+            }
+        }
+    }
+}
+
+pub fn identify_vrtta(
+    input: Input, vrtta_data: VrttaData, params: Params
+) -> BinaryHeap<IdentifyResult> {
+    println!("No of vrtta metres in the database: \n{}",vrtta_data.metres.len());
+    let mut matches: BinaryHeap<IdentifyResult> = BinaryHeap::new();
+    match params.search_params {
+            SearchParams::SearchExact => {
+                for metre in vrtta_data.metres {
+                    if matches_exact_vrtta(metre,input, params.use_params) {
+                        matches.push(
+                            IdentifyResult {
+                                name: metre.name,
+                                description: "todo!()".to_string(),
+                                similarity: 0,
+                                actual: get_actual(metre.pattern),
+                                input: get_actual(metre.patttern),
+                            }
+                        );
+                        return matches;
+                    }
+                }
+            }
+            SearchParams::SearchFuzzy => {
+                for metre in vrtta_data.metres {
+                    matches.push(
+                        matches_fuzzy_vrtta(metre,input,params.use_params)
+                    );
+                }
+                return matches;
+            }
+    }
+    matches.push(IdentifyResult {
+        name: "-".to_string(),
+        description: "Could Not Identify the metre!".to_string(),
+        similarity: 0,
+        actual: Vec::new(),
+        input: Vec::new(),
+    });
+    return matches;
+}
 
 //// Structs that store the metrical data from mishra.json
 
@@ -17,7 +126,6 @@ extern crate levenshtein;
 
 //     println!("SOME ERROR OCCURED! :(");
 //     return 99999;
-// }
 
 // pub fn is_sama_vrtta(s: &Vec<Metre>) -> bool {
 //     let pada_len = s.len() / 4;
