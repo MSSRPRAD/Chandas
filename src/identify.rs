@@ -6,9 +6,8 @@
 extern crate levenshtein;
 use levenshtein::levenshtein;
 use crate::data::{VrttaData, StringOrList, Vrtta};
-use crate::utils::{IdentifyResult, Input, Params, UseParams, SearchParams};
+use crate::utils::{IdentifyResult, IdentifyParams, Input, Params, SearchParams};
 // use crate::scheme::Me
-use std::collections::BinaryHeap;
 
 fn get_actual(string_or_list: StringOrList) -> Vec<String> {
     match string_or_list {
@@ -31,87 +30,36 @@ fn get_actual(string_or_list: StringOrList) -> Vec<String> {
     }
 }
 
-pub fn matches_fuzzy_vrtta(metre: Vrtta, input: Input, use_param: UseParams ) -> IdentifyResult {
-    match use_param {
-        UseParams::UseExact => {
-            let similarity = 0;
-            let actual = get_actual(metre.pattern);
-            let mut inp = Vec::new();
-            if let Some(pada1) = input.PadaOne {
-                similarity += levenshtein(&actual[0], &pada1);
-                inp.push(pada1);
-            }
-
-            if let Some(pada2) = input.PadaTwo {
-                similarity += levenshtein(&actual[1], &pada2);
-                inp.push(pada2);
-            }
-
-            if let Some(pada3) = input.PadaThree {
-                similarity += levenshtein(&actual[2], &pada3);
-                inp.push(pada3);
-            }
-
-            if let Some(pada4) = input.PadaFour {
-                similarity += levenshtein(&actual[3], &pada4);
-                inp.push(pada4);
-            }
-
-            return IdentifyResult {
-                name: metre.name,
-                description: "todo!()".to_string(),
-                similarity: similarity,
-                actual: actual,
-                input: inp,
-            };
+pub fn identify(
+    input: Input, vrtta_data: VrttaData, params: Params
+) -> Vec<IdentifyResult> {
+    match params.identify_params {
+        IdentifyParams::IdentifyVrtta => {
+            return identify_vrtta(
+                input,vrtta_data,params
+            )
         },
-        UseParams::UseMerged => {
-            let actual = get_actual(metre.pattern);
-            if let Some(pada) = input.PadaOneTwo {
-
-            }
+        _ => {
+          panic!("Not Implemented Yet!");
         }
     }
 }
 
 pub fn identify_vrtta(
     input: Input, vrtta_data: VrttaData, params: Params
-) -> BinaryHeap<IdentifyResult> {
-    println!("No of vrtta metres in the database: \n{}",vrtta_data.metres.len());
-    let mut matches: BinaryHeap<IdentifyResult> = BinaryHeap::new();
-    match params.search_params {
-            SearchParams::SearchExact => {
-                for metre in vrtta_data.metres {
-                    if matches_exact_vrtta(metre,input, params.use_params) {
-                        matches.push(
-                            IdentifyResult {
-                                name: metre.name,
-                                description: "todo!()".to_string(),
-                                similarity: 0,
-                                actual: get_actual(metre.pattern),
-                                input: get_actual(metre.patttern),
-                            }
-                        );
-                        return matches;
-                    }
-                }
-            }
-            SearchParams::SearchFuzzy => {
-                for metre in vrtta_data.metres {
-                    matches.push(
-                        matches_fuzzy_vrtta(metre,input,params.use_params)
-                    );
-                }
-                return matches;
-            }
+) -> Vec<IdentifyResult> {
+    println!("No of vrtta metres in the database: \n{}\n\n",vrtta_data.metres.len());
+    let mut matches: Vec<IdentifyResult> = Vec::new();
+    for metre in vrtta_data.metres {
+        let name = String::from(metre.name);
+        let description = String::from("todo!()");
+        let scheme = get_actual(metre.pattern);
+        let fuzzy_merged_search = None;
+        let fuzzy_exact_search = None;
+        let fuzzy_extra_search = None;
+        matches.push(IdentifyResult{name, description, scheme, fuzzy_merged_search, fuzzy_exact_search, fuzzy_extra_search});
+
     }
-    matches.push(IdentifyResult {
-        name: "-".to_string(),
-        description: "Could Not Identify the metre!".to_string(),
-        similarity: 0,
-        actual: Vec::new(),
-        input: Vec::new(),
-    });
     return matches;
 }
 

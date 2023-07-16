@@ -6,13 +6,13 @@ mod scheme;
 pub mod utils;
 pub mod data;
 use crate::identify::{
-    identify_vrtta,
+    identify,
 };
 use crate::data::{
     read_json_vrtta, VrttaData, read_json_matra, MatraData,
 };
 use crate::utils::{
-    Input, UseParams, SearchParams, IdentifyParams, Params,
+    Input, SearchParams::{MergedSearch, ExactSearch, ExtraSearch}, IdentifyParams, Params,
 };
 fn main() {
     //Input Verse in slp1 encoding
@@ -26,12 +26,13 @@ pUrvAparO toyaniDI vigAhya sTitaH pfTivyA iva mAnadaRqaH ..";
     let input = Input::new(verse);
     println!("{:?}", input);
 
-    let params = Params::new(IdentifyParams::IdentifyVrtta,
-                             UseParams::UseExact,
-                             SearchParams::SearchFuzzy);
+    let params = Params::new(
+        IdentifyParams::IdentifyVrtta,
+        vec![MergedSearch, ExactSearch, ExtraSearch]
+    );
 
     let vrtta_data = read_json_vrtta();
 
-    let metre = identify_vrtta(input, vrtta_data, params);
-
+    let metre = identify(input, vrtta_data, params);
+    // println!("\n\n{:?}\n\n", metre);
 }

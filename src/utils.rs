@@ -12,7 +12,7 @@ const HAL: &str = "kKgGNcCjJYwWqQRtTdDnpPbBmyrlvSzsh";
 const OTHERS: &str = "MH";
 //Sanskrit
 const SANSKRIT: &str = "aAiIuUfFxXeEoOMHkKgGNcCjJYwWqQRtTdDnpPbBmyrlvSzshL";
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct Input {
     pub PadaOne: Option<String>,
     pub PadaTwo: Option<String>,
@@ -86,28 +86,8 @@ impl Input {
 
         input
     }
-    fn padas(&self) -> usize {
-        let mut count = 0;
-
-        if self.PadaOne.is_some() {
-            count += 1;
-        }
-
-        if self.PadaTwo.is_some() {
-            count += 1;
-        }
-
-        if self.PadaThree.is_some() {
-            count += 1;
-        }
-
-        if self.PadaFour.is_some() {
-            count += 1;
-        }
-
-        count
-    }
 }
+
 #[derive(Debug)]
 pub enum IdentifyParams {
     IdentifyAnushtup,
@@ -115,33 +95,27 @@ pub enum IdentifyParams {
     IdentifyVrtta,
     IdentifyAll,
 }
-#[derive(Debug)]
-pub enum UseParams {
-    UseExact,
-    UseMerged,
-}
+
 #[derive(Debug)]
 pub enum SearchParams {
-    SearchFuzzy,
-    SearchExact,
+    MergedSearch,
+    ExactSearch,
+    ExtraSearch,
 }
 
 #[derive(Debug)]
 pub struct Params {
     pub identify_params: IdentifyParams,
-    pub use_params: UseParams,
-    pub search_params: SearchParams,
+    pub search_params: Vec<SearchParams>,
 }
 
 impl Params {
     pub fn new(
         identify_params: IdentifyParams,
-        use_params: UseParams,
-        search_params: SearchParams,
+        search_params: Vec<SearchParams>,
     ) -> Params {
         Params {
             identify_params,
-            use_params,
             search_params,
         }
     }
@@ -151,20 +125,19 @@ impl Params {
 pub struct IdentifyResult {
     pub name: String,
     pub description: String,
-    pub similarity: usize,
-    pub actual: Vec<String>,
-    pub input: Vec<String>,
+    pub scheme: Vec<String>,
+    pub fuzzy_merged_search: Option<(usize, bool)>,
+    pub fuzzy_exact_search: Option<(usize, bool)>,
+    pub fuzzy_extra_search: Option<FuzzyExtraSearch>,
 }
-impl Ord for IdentifyResult {
-    fn cmp(&self, other: &Self) -> std::cmp::Ordering {
-        other.similarity.cmp(&self.similarity) // Reverse ordering for BinaryHeap
-    }
+
+#[derive(Debug, Eq, PartialEq)]
+pub struct FuzzyExtraSearch {
+    pub padas_padas: Vec<Vec<usize>>,
+    pub padas_full: usize,
+    pub padas_12_34: usize,
 }
-impl PartialOrd for IdentifyResult {
-    fn partial_cmp(&self, other: &Self) -> Option<std::cmp::Ordering> {
-        Some(self.cmp(other))
-    }
-}
+
 // A set of Sanskrit sounds.
 //
 // This implementation is copied directly from `vidyut_prakriya::sounds`. For details, see the
