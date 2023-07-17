@@ -6,7 +6,7 @@
 extern crate levenshtein;
 use levenshtein::levenshtein;
 use crate::data::{VrttaData, StringOrList, Vrtta};
-use crate::utils::{IdentifyResult, IdentifyParams, Input, Params, SearchParams};
+use crate::utils::{MatchTracker, PatternMatch, MatchType, IdentifyParams, Input, Params, SearchParams::{MergedSearch, ExactSearch, ExtraSearch}};
 // use crate::scheme::Me
 
 fn get_actual(string_or_list: StringOrList) -> Vec<String> {
@@ -30,37 +30,19 @@ fn get_actual(string_or_list: StringOrList) -> Vec<String> {
     }
 }
 
-pub fn identify(
-    input: Input, vrtta_data: VrttaData, params: Params
-) -> Vec<IdentifyResult> {
-    match params.identify_params {
-        IdentifyParams::IdentifyVrtta => {
-            return identify_vrtta(
-                input,vrtta_data,params
-            )
-        },
-        _ => {
-          panic!("Not Implemented Yet!");
-        }
-    }
-}
-
 pub fn identify_vrtta(
     input: Input, vrtta_data: VrttaData, params: Params
-) -> Vec<IdentifyResult> {
+) -> MatchTracker {
     println!("No of vrtta metres in the database: \n{}\n\n",vrtta_data.metres.len());
-    let mut matches: Vec<IdentifyResult> = Vec::new();
+    // Results
+    let mut tracker = MatchTracker::new(3);
+    // matches = PatternMatch;
     for metre in vrtta_data.metres {
-        let name = String::from(metre.name);
-        let description = String::from("todo!()");
-        let scheme = get_actual(metre.pattern);
-        let fuzzy_merged_search = None;
-        let fuzzy_exact_search = None;
-        let fuzzy_extra_search = None;
-        matches.push(IdentifyResult{name, description, scheme, fuzzy_merged_search, fuzzy_exact_search, fuzzy_extra_search});
-
+        // Find the quality
+        println!("Metre Name: {}", metre.name);
+        println!("Pattern: {:?}", metre.pattern);
     }
-    return matches;
+    return tracker;
 }
 
 //// Structs that store the metrical data from mishra.json

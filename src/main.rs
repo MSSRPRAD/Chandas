@@ -6,7 +6,7 @@ mod scheme;
 pub mod utils;
 pub mod data;
 use crate::identify::{
-    identify,
+    identify_vrtta,
 };
 use crate::data::{
     read_json_vrtta, VrttaData, read_json_matra, MatraData,
@@ -33,6 +33,6 @@ pUrvAparO toyaniDI vigAhya sTitaH pfTivyA iva mAnadaRqaH ..";
 
     let vrtta_data = read_json_vrtta();
 
-    let metre = identify(input, vrtta_data, params);
+    let metre = identify_vrtta(input, vrtta_data, params);
     // println!("\n\n{:?}\n\n", metre);
 }

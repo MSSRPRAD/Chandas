@@ -12,6 +12,71 @@ const HAL: &str = "kKgGNcCjJYwWqQRtTdDnpPbBmyrlvSzsh";
 const OTHERS: &str = "MH";
 //Sanskrit
 const SANSKRIT: &str = "aAiIuUfFxXeEoOMHkKgGNcCjJYwWqQRtTdDnpPbBmyrlvSzshL";
+
+use crate::data::Vrtta;
+use std::cmp::Ordering;
+use std::collections::HashMap;
+
+#[derive(Debug)]
+pub struct PatternMatch {
+    pub pattern: Vrtta,
+    pub match_type: MatchType,
+    pub quality: u32,
+}
+
+impl PartialEq for PatternMatch {
+    fn eq(&self, other: &Self) -> bool {
+        self.quality == other.quality
+    }
+}
+
+impl Eq for PatternMatch {}
+
+impl PartialOrd for PatternMatch {
+    fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
+        Some(other.quality.cmp(&self.quality)) // Reverse the ordering for a max heap
+    }
+}
+
+impl Ord for PatternMatch {
+    fn cmp(&self, other: &Self) -> Ordering {
+        self.partial_cmp(other).unwrap()
+    }
+}
+
+#[derive(Debug, PartialEq, Eq, Hash)]
+pub enum MatchType {
+    IndividualPada,
+    FirstTwo,
+    LastTwo,
+    FirstTwoAndLastTwo,
+    WholePattern,
+}
+
+pub struct MatchTracker {
+    pub matches: HashMap<MatchType, Vec<PatternMatch>>,
+    pub max_matches: usize,
+}
+
+impl MatchTracker {
+    pub fn new(max_matches: usize) -> Self {
+        Self {
+            matches: HashMap::new(),
+            max_matches,
+        }
+    }
+
+    pub fn add_match(&mut self, match_type: MatchType, match_instance: PatternMatch) {
+        let matches = self.matches.entry(match_type).or_insert(Vec::new());
+
+        matches.push(match_instance);
+        matches.sort_unstable_by(|a, b| b.quality.cmp(&a.quality));
+        while matches.len() > self.max_matches {
+            matches.pop();
+        }
+    }
+}
+
 #[derive(Debug, Clone)]
 pub struct Input {
     pub PadaOne: Option<String>,
@@ -119,23 +184,6 @@ impl Params {
             search_params,
         }
     }
-}
-
-#[derive(Debug, Eq, PartialEq)]
-pub struct IdentifyResult {
-    pub name: String,
-    pub description: String,
-    pub scheme: Vec<String>,
-    pub fuzzy_merged_search: Option<(usize, bool)>,
-    pub fuzzy_exact_search: Option<(usize, bool)>,
-    pub fuzzy_extra_search: Option<FuzzyExtraSearch>,
-}
-
-#[derive(Debug, Eq, PartialEq)]
-pub struct FuzzyExtraSearch {
-    pub padas_padas: Vec<Vec<usize>>,
-    pub padas_full: usize,
-    pub padas_12_34: usize,
 }
 
 // A set of Sanskrit sounds.
