@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SanskritMetresRust</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .response-column {
+            display: inline-block;
+            margin: 10px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            vertical-align: top;
+        }
+    </style>
+</head>
+<body>
+    <h1>Sanskrit Metres Rust</h1>
+    <div id="metre-board">
+        <form id="inputForm">
+            <textarea id="inputData" name="inputData" rows="10" cols="50" placeholder="Enter your data here"></textarea>
+            <button type="button" id="submitBtn">Submit</button>
+        </form>
+        <div id="responseDiv">
+            <div class="response-column" id="matraColumn">
+                <!-- The 'resp_matra' response will be displayed here -->
+            </div>
+            <div class="response-column" id="vrttaColumn">
+                <!-- The 'resp_vrtta' response will be displayed here -->
+            </div>
+            <div class="response-column" id="anushtupColumn">
+                <!-- The 'resp_anust' response will be displayed here -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('submitBtn').addEventListener('click', function() {
+            const inputData = document.getElementById('inputData').value;
+
+            fetch('/api', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ inputData: inputData })
+            })
+            .then(response => response.json())
+            .then(data => {
+                const matraColumn = document.getElementById('matraColumn');
+                matraColumn.innerText = 'Matra: ' + data.matra;
+
+                const vrttaColumn = document.getElementById('vrttaColumn');
+                vrttaColumn.innerText = 'Vrtta: ' + data.vrtta;
+
+                const anushtupColumn = document.getElementById('anushtupColumn');
+                anushtupColumn.innerText = 'Anushtup: ' + data.anushtup;
+            })
+            .catch(error => console.error('Request failed:', error));
+        });
+    </script>
+</body>
+</html>

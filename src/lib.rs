@@ -32,24 +32,67 @@ fn identify_anushtup_rs(verse: String) -> PyResult<String> {
     let verse = &verse;
 
     //Print the input verse
-    println!("\nInput Verse:\n{}\n\n", verse);
+    // println!("\nInput Verse:\n{}\n\n", verse);
 
     // Make the Input Struct
     let input = Input::new(verse);
-    println!("{:?}", input);
+    // println!("{:?}", input);
 
     let matra_data = read_json_vrtta();
 
     let metre = identify_anushtup(input, matra_data);
-    println!("\n\n{:?}\n", metre);
+    // println!("\n\n{:?}\n", metre);
 
     let res = to_string(&metre).unwrap();
     return Ok(res);
 }
 
+#[pyfunction]
+fn identify_vrtta_rs(verse: String) -> PyResult<String> {
+    //Input Verse in slp1 encoding
+    let verse = &verse;
+
+    //Print the input verse
+    // println!("\nInput Verse:\n{}\n\n", verse);
+
+    // Make the Input Struct
+    let input = Input::new(verse);
+    // println!("{:?}", input);
+
+    let matra_data = read_json_vrtta();
+
+    let metre = identify_vrtta(input, matra_data);
+    // println!("\n\n{:?}\n", metre);
+
+    let res = to_string(&metre).unwrap();
+    return Ok(res);
+}
+
+#[pyfunction]
+fn identify_matra_rs(verse: String) -> PyResult<String> {
+    //Input Verse in slp1 encoding
+    let verse = &verse;
+
+    //Print the input verse
+    // println!("\nInput Verse:\n{}\n\n", verse);
+
+    // Make the Input Struct
+    let input = Input::new(verse);
+    // println!("{:?}", input);
+
+    let matra_data = read_json_matra();
+
+    let metre = identify_matra(input, matra_data);
+    // println!("\n\n{:?}\n", metre);
+
+    let res = to_string(&metre).unwrap();
+    return Ok(res);
+}
 
 #[pymodule]
 fn chandas(_py: Python<'_>, m: &PyModule) -> PyResult<()> {
     m.add_function(wrap_pyfunction!(identify_anushtup_rs, m)?)?;
+    m.add_function(wrap_pyfunction!(identify_vrtta_rs, m)?)?;
+    m.add_function(wrap_pyfunction!(identify_matra_rs, m)?)?;
     Ok(())
 }
