@@ -11,9 +11,9 @@ h1 {
 .letter-box {
   border: 2px solid gray;
   border-radius: 3px;
-  margin: 3px;
-  font-size: 3rem;
-  font-weight: 700;
+  margin: 1px;
+  font-size: 1rem;
+  font-weight: 200;
   height: 4rem;
   width: 4rem;
   display: flex;
@@ -28,3 +28,4 @@ h1 {
 
 .letter-row {
   display: flex;
+}

@@ -16,5 +16,36 @@ function initBoard() {
 
         board.appendChild(row)
     }
+
+  let letterBoxes = document.querySelectorAll(".letter-box");
+  let currentBox = 0;
+  let letters = "";
+  let special = ['Shift', 'Enter', 'Space'];
+  document.addEventListener("keydown", function(event){
+    if(special.includes(event.key)){
+      return;
+    }
+    console.log(event);
+    const key = event.key;
+    const isVowel = "aAiIuUeaoauRRlRlRR".includes(key);
+    if(isVowel) {
+      letters += key;
+      letterBoxes[currentBox].textContent = letters;
+      currentBox++;
+      letters = ""
+    } else {
+      letterBoxes[currentBox].textContent = letters;
+      letters += key;
+    }
+  });
+
+  letterBoxes.forEach(
+    (box,index) => {
+      box.addEventListener("click", function(event){
+        currentBox = index;
+        letters = box.textContent;
+      });
+    }
+  )
 }
 initBoard()
