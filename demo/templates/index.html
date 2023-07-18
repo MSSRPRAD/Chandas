@@ -14,6 +14,15 @@
             border: 1px solid #ccc;
             vertical-align: top;
         }
+        
+        .response-title {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        
+        .response-content {
+            white-space: pre-line;
+        }
     </style>
 </head>
 <body>
@@ -25,13 +34,16 @@
         </form>
         <div id="responseDiv">
             <div class="response-column" id="matraColumn">
-                <!-- The 'resp_matra' response will be displayed here -->
+                <div class="response-title">Matra:</div>
+                <div class="response-content" id="matraContent"></div>
             </div>
             <div class="response-column" id="vrttaColumn">
-                <!-- The 'resp_vrtta' response will be displayed here -->
+                <div class="response-title">Vrtta:</div>
+                <div class="response-content" id="vrttaContent"></div>
             </div>
             <div class="response-column" id="anushtupColumn">
-                <!-- The 'resp_anust' response will be displayed here -->
+                <div class="response-title">Anushtup:</div>
+                <div class="response-content" id="anushtupContent"></div>
             </div>
         </div>
     </div>
@@ -49,14 +61,14 @@
             })
             .then(response => response.json())
             .then(data => {
-                const matraColumn = document.getElementById('matraColumn');
-                matraColumn.innerText = 'Matra: ' + data.matra;
-
-                const vrttaColumn = document.getElementById('vrttaColumn');
-                vrttaColumn.innerText = 'Vrtta: ' + data.vrtta;
-
-                const anushtupColumn = document.getElementById('anushtupColumn');
-                anushtupColumn.innerText = 'Anushtup: ' + data.anushtup;
+                const matraContent = document.getElementById('matraContent');
+                matraContent.innerText = data.matra;
+                
+                const vrttaContent = document.getElementById('vrttaContent');
+                vrttaContent.innerText = data.vrtta;
+                
+                const anushtupContent = document.getElementById('anushtupContent');
+                anushtupContent.innerText = data.anushtup;
             })
             .catch(error => console.error('Request failed:', error));
         });

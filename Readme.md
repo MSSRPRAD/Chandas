@@ -32,8 +32,6 @@ python;
 ```
 virtualenv venv;
 . venv/bin/activate.fish;
-maturin develop;
-cd demo;
-pip install -r requirements.txt;
-python app.py;
+pip install flask maturin;
+python demo/app.py
 ```
