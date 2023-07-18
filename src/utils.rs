@@ -1,6 +1,7 @@
 use crate::process::clean;
 use crate::scheme::find_scheme;
 use lazy_static::lazy_static;
+use serde::Serialize;
 type Sound = char;
 //hrasva Vowels
 const HRASVA: &str = "aiufx";
@@ -17,7 +18,7 @@ use crate::data::Vrtta;
 use std::cmp::Ordering;
 use std::collections::HashMap;
 
-#[derive(Debug)]
+#[derive(Debug, Serialize)]
 pub struct PatternMatch {
     pub metre: Vrtta,
     pub match_type: MatchType,
@@ -62,7 +63,7 @@ impl Ord for PatternMatch {
         other.quality.partial_cmp(&self.quality).unwrap()
     }
 }
-#[derive(Debug, PartialEq, Eq, Hash, Copy, Clone)]
+#[derive(Debug, PartialEq, Eq, Hash, Copy, Clone, Serialize)]
 pub enum MatchType {
     IndividualPadaOne,
     IndividualPadaTwo,
@@ -73,7 +74,7 @@ pub enum MatchType {
     WholePada,
 }
 
-#[derive(Debug)]
+#[derive(Debug, Serialize)]
 pub struct MatchTracker {
     pub matches: HashMap<MatchType, Vec<PatternMatch>>,
     pub max_matches: usize,
@@ -98,7 +99,7 @@ impl MatchTracker {
     }
 }
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Serialize)]
 pub struct Input {
     pub PadaOne: Option<String>,
     pub PadaTwo: Option<String>,
