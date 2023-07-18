@@ -16,7 +16,7 @@ fn scheme_exists(scheme: &Option<String>) -> bool {
 }
 
 pub fn check_individual_match(input: Input, metre: Vrtta) -> Vec<PatternMatch> {
-    let actual = get_actual(metre.clone().pattern);
+    let mut actual = get_actual(metre.clone().pattern);
     let mut matches: Vec<PatternMatch> = Vec::new();
     let match_types = vec![
         MatchType::IndividualPadaOne,
@@ -24,41 +24,206 @@ pub fn check_individual_match(input: Input, metre: Vrtta) -> Vec<PatternMatch> {
         MatchType::IndividualPadaThree,
         MatchType::IndividualPadaFour,
     ];
+
+    // Individual Pada 1
     if scheme_exists(&input.SchemeOne) {
+        let len1 = actual[0].len();
+        // Gante Condition for Pada1
+        if input.SchemeOne.clone().unwrap().len() == actual[0].len() {
+            actual[0].replace_range(
+                len1 - 1..len1,
+                &input
+                    .SchemeOne
+                    .clone()
+                    .unwrap()
+                    .chars()
+                    .last()
+                    .unwrap()
+                    .to_string(),
+            );
+        }
         matches.push(PatternMatch {
             metre: metre.clone(),
             match_type: match_types[0],
             quality: 1.0
                 - levenshtein(&input.SchemeOne.clone().unwrap(), &actual[0]) as f64
-                    / input.SchemeOne.unwrap().len() as f64,
-        })
+                    / input.SchemeOne.clone().unwrap().len() as f64,
+            pada: Some(1),
+        });
+        matches.push(PatternMatch {
+            metre: metre.clone(),
+            match_type: match_types[0],
+            quality: 1.0
+                - levenshtein(&input.SchemeOne.clone().unwrap(), &actual[1]) as f64
+                    / input.SchemeOne.clone().unwrap().len() as f64,
+            pada: Some(2),
+        });
+        matches.push(PatternMatch {
+            metre: metre.clone(),
+            match_type: match_types[0],
+            quality: 1.0
+                - levenshtein(&input.SchemeOne.clone().unwrap(), &actual[2]) as f64
+                    / input.SchemeOne.clone().unwrap().len() as f64,
+            pada: Some(3),
+        });
+        matches.push(PatternMatch {
+            metre: metre.clone(),
+            match_type: match_types[0],
+            quality: 1.0
+                - levenshtein(&input.SchemeOne.clone().unwrap(), &actual[3]) as f64
+                    / input.SchemeOne.clone().unwrap().len() as f64,
+            pada: Some(4),
+        });
     }
+    // Second Pada
     if scheme_exists(&input.SchemeTwo) {
+        let len2 = actual[1].len();
+        // Gante Condition for Pada2
+        if input.SchemeTwo.clone().unwrap().len() == actual[1].len() {
+            actual[1].replace_range(
+                len2 - 1..len2,
+                &input
+                    .SchemeTwo
+                    .clone()
+                    .unwrap()
+                    .chars()
+                    .last()
+                    .unwrap()
+                    .to_string(),
+            );
+        }
+        matches.push(PatternMatch {
+            metre: metre.clone(),
+            match_type: match_types[1],
+            quality: 1.0
+                - levenshtein(&input.SchemeTwo.clone().unwrap(), &actual[0]) as f64
+                    / input.SchemeTwo.clone().unwrap().len() as f64,
+            pada: Some(1),
+        });
         matches.push(PatternMatch {
             metre: metre.clone(),
             match_type: match_types[1],
             quality: 1.0
                 - levenshtein(&input.SchemeTwo.clone().unwrap(), &actual[1]) as f64
-                    / input.SchemeTwo.unwrap().len() as f64,
-        })
+                    / input.SchemeTwo.clone().unwrap().len() as f64,
+            pada: Some(2),
+        });
+        matches.push(PatternMatch {
+            metre: metre.clone(),
+            match_type: match_types[1],
+            quality: 1.0
+                - levenshtein(&input.SchemeTwo.clone().unwrap(), &actual[2]) as f64
+                    / input.SchemeTwo.clone().unwrap().len() as f64,
+            pada: Some(3),
+        });
+        matches.push(PatternMatch {
+            metre: metre.clone(),
+            match_type: match_types[1],
+            quality: 1.0
+                - levenshtein(&input.SchemeTwo.clone().unwrap(), &actual[3]) as f64
+                    / input.SchemeTwo.clone().unwrap().len() as f64,
+            pada: Some(4),
+        });
     }
+    // Pada 3
     if scheme_exists(&input.SchemeThree) {
+        let len3 = actual[2].len();
+        // Gante Condition for Pada3
+        if input.SchemeThree.clone().unwrap().len() == actual[2].len() {
+            actual[2].replace_range(
+                len3 - 1..len3,
+                &input
+                    .SchemeThree
+                    .clone()
+                    .unwrap()
+                    .chars()
+                    .last()
+                    .unwrap()
+                    .to_string(),
+            );
+        }
+        matches.push(PatternMatch {
+            metre: metre.clone(),
+            match_type: match_types[2],
+            quality: 1.0
+                - levenshtein(&input.SchemeThree.clone().unwrap(), &actual[0]) as f64
+                    / input.SchemeThree.clone().unwrap().len() as f64,
+            pada: Some(1),
+        });
+        matches.push(PatternMatch {
+            metre: metre.clone(),
+            match_type: match_types[2],
+            quality: 1.0
+                - levenshtein(&input.SchemeThree.clone().unwrap(), &actual[1]) as f64
+                    / input.SchemeThree.clone().unwrap().len() as f64,
+            pada: Some(2),
+        });
         matches.push(PatternMatch {
             metre: metre.clone(),
             match_type: match_types[2],
             quality: 1.0
                 - levenshtein(&input.SchemeThree.clone().unwrap(), &actual[2]) as f64
-                    / input.SchemeThree.unwrap().len() as f64,
-        })
+                    / input.SchemeThree.clone().unwrap().len() as f64,
+            pada: Some(3),
+        });
+        matches.push(PatternMatch {
+            metre: metre.clone(),
+            match_type: match_types[2],
+            quality: 1.0
+                - levenshtein(&input.SchemeThree.clone().unwrap(), &actual[3]) as f64
+                    / input.SchemeThree.clone().unwrap().len() as f64,
+            pada: Some(4),
+        });
     }
+    // Pada 4
     if scheme_exists(&input.SchemeFour) {
+        let len4 = actual[3].len();
+        // Gante Condition for Pada4
+        if input.SchemeFour.clone().unwrap().len() == actual[3].len() {
+            actual[3].replace_range(
+                len4 - 1..len4,
+                &input
+                    .SchemeFour
+                    .clone()
+                    .unwrap()
+                    .chars()
+                    .last()
+                    .unwrap()
+                    .to_string(),
+            );
+        }
+        matches.push(PatternMatch {
+            metre: metre.clone(),
+            match_type: match_types[3],
+            quality: 1.0
+                - levenshtein(&input.SchemeFour.clone().unwrap(), &actual[0]) as f64
+                    / input.SchemeFour.clone().unwrap().len() as f64,
+            pada: Some(1),
+        });
+        matches.push(PatternMatch {
+            metre: metre.clone(),
+            match_type: match_types[3],
+            quality: 1.0
+                - levenshtein(&input.SchemeFour.clone().unwrap(), &actual[1]) as f64
+                    / input.SchemeFour.clone().unwrap().len() as f64,
+            pada: Some(2),
+        });
+        matches.push(PatternMatch {
+            metre: metre.clone(),
+            match_type: match_types[3],
+            quality: 1.0
+                - levenshtein(&input.SchemeFour.clone().unwrap(), &actual[2]) as f64
+                    / input.SchemeFour.clone().unwrap().len() as f64,
+            pada: Some(3),
+        });
         matches.push(PatternMatch {
             metre: metre.clone(),
             match_type: match_types[3],
             quality: 1.0
                 - levenshtein(&input.SchemeFour.clone().unwrap(), &actual[3]) as f64
-                    / input.SchemeFour.unwrap().len() as f64,
-        })
+                    / input.SchemeFour.clone().unwrap().len() as f64,
+            pada: Some(4),
+        });
     }
     matches
 }
@@ -76,26 +241,139 @@ pub fn replace_x(first_string: String, second_string: String) -> String {
 }
 
 pub fn check_whole_match_anushtup(input: Input, metre: Vrtta) -> PatternMatch {
-    let actual = get_actual(metre.clone().pattern).concat();
-    let found = replace_x(actual.clone(),input.SchemeAll.clone().unwrap());
-    println!("Checking b/w: \n{:?}\nand\n{:?}", &input.SchemeAll.clone().unwrap(), found);
+    let mut actual = get_actual(metre.clone().pattern).concat();
+    let actual1 = get_actual(metre.clone().pattern);
+    let l1 = actual1[0].len();
+    let l2 = actual1[1].len();
+    let l3 = actual1[2].len();
+    let l4 = actual1[3].len();
+    // Seperate condition to check when the difference could be that of gante (when the dimensions of both are same)
+    if &actual.len() == &input.SchemeAll.clone().unwrap().len() {
+        // let actual1 = actual.clone();
+        actual.replace_range(
+            l1 - 1..l1,
+            &input
+                .SchemeAll
+                .clone()
+                .unwrap()
+                .chars()
+                .nth(l1 - 1)
+                .unwrap()
+                .to_string(),
+        );
+        actual.replace_range(
+            l1 + l2 - 1..l1+l2,
+            &input
+                .SchemeAll
+                .clone()
+                .unwrap()
+                .chars()
+                .nth(l1 + l2 - 1)
+                .unwrap()
+                .to_string(),
+        );
+        actual.replace_range(
+            l1 + l2 + l3 - 1..l1+l2+l3,
+            &input
+                .SchemeAll
+                .clone()
+                .unwrap()
+                .chars()
+                .nth(l1 + l2 + l3 - 1)
+                .unwrap()
+                .to_string(),
+        );
+        actual.replace_range(
+            l1 + l2 + l3 + l4 - 1..l1+l2+l3+l4,
+            &input
+                .SchemeAll
+                .clone()
+                .unwrap()
+                .chars()
+                .nth(l1 + l2 + l3 + l4 - 1)
+                .unwrap()
+                .to_string(),
+        );
+    }
+    println!("\nreached here!!!\n");
+    let found = replace_x(actual.clone(), input.SchemeAll.clone().unwrap());
+    println!(
+        "Checking b/w: \n{:?}\nand\n{:?}",
+        &input.SchemeAll.clone().unwrap(),
+        found
+    );
     let distance = levenshtein(&input.SchemeAll.clone().unwrap(), &found) as f64;
     let quality = 1.0 - distance / (actual.len() as f64);
     PatternMatch {
         metre: metre,
         match_type: MatchType::WholePada,
         quality: quality,
+        pada: None,
     }
 }
 
 pub fn check_whole_match(input: Input, metre: Vrtta) -> PatternMatch {
-    let actual = get_actual(metre.clone().pattern).concat();
+    let mut actual = get_actual(metre.clone().pattern).concat();
+    let actual1 = get_actual(metre.clone().pattern);
+    let l1 = actual1[0].len();
+    let l2 = actual1[1].len();
+    let l3 = actual1[2].len();
+    let l4 = actual1[3].len();
+    // Seperate condition to check when the difference could be that of gante (when the dimensions of both are same)
+    if &actual.len() == &input.SchemeAll.clone().unwrap().len() {
+        // let actual1 = actual.clone();
+        actual.replace_range(
+            l1 - 1..l1,
+            &input
+                .SchemeAll
+                .clone()
+                .unwrap()
+                .chars()
+                .nth(l1 - 1)
+                .unwrap()
+                .to_string(),
+        );
+        actual.replace_range(
+            l1 + l2 - 1..l1+l2,
+            &input
+                .SchemeAll
+                .clone()
+                .unwrap()
+                .chars()
+                .nth(l1 + l2 - 1)
+                .unwrap()
+                .to_string(),
+        );
+        actual.replace_range(
+            l1 + l2 + l3 - 1..l1+l2+l3,
+            &input
+                .SchemeAll
+                .clone()
+                .unwrap()
+                .chars()
+                .nth(l1 + l2 + l3 - 1)
+                .unwrap()
+                .to_string(),
+        );
+        actual.replace_range(
+            l1 + l2 + l3 + l4 - 1..l1+l2+l3+l4,
+            &input
+                .SchemeAll
+                .clone()
+                .unwrap()
+                .chars()
+                .nth(l1 + l2 + l3 + l4 - 1)
+                .unwrap()
+                .to_string(),
+        );
+    }
     let distance = levenshtein(&actual, &input.SchemeAll.unwrap()) as f64;
     let quality = 1.0 - distance / (actual.len() as f64);
     PatternMatch {
         metre: metre,
         match_type: MatchType::WholePada,
         quality: quality,
+        pada: None,
     }
 }
 
@@ -110,6 +388,7 @@ pub fn check_pair_match(input: Input, metre: Vrtta) -> Vec<PatternMatch> {
             quality: 1.0
                 - levenshtein(&input.SchemeOneTwo.clone().unwrap(), &actual[0]) as f64
                     / input.SchemeOneTwo.unwrap().len() as f64,
+            pada: Some(12),
         })
     }
     if scheme_exists(&input.SchemeThreeFour) {
@@ -119,6 +398,7 @@ pub fn check_pair_match(input: Input, metre: Vrtta) -> Vec<PatternMatch> {
             quality: 1.0
                 - levenshtein(&input.SchemeThreeFour.clone().unwrap(), &actual[1]) as f64
                     / input.SchemeThreeFour.unwrap().len() as f64,
+            pada: Some(34),
         })
     }
     matches

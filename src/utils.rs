@@ -22,14 +22,21 @@ pub struct PatternMatch {
     pub metre: Vrtta,
     pub match_type: MatchType,
     pub quality: f64,
+    pub pada: Option<usize>,
 }
 
 impl PatternMatch {
-    pub fn new(metre: Vrtta, match_type: MatchType, quality: f64) -> PatternMatch {
+    pub fn new(
+        metre: Vrtta,
+        match_type: MatchType,
+        quality: f64,
+        pada: Option<usize>,
+    ) -> PatternMatch {
         PatternMatch {
             metre,
             match_type,
             quality,
+            pada,
         }
     }
 }
