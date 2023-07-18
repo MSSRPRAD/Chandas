@@ -34,5 +34,5 @@ pUrvAparO toyaniDI vigAhya sTitaH pfTivyA iva mAnadaRqaH ..";
     let vrtta_data = read_json_vrtta();
 
     let metre = identify_vrtta(input, vrtta_data, params);
-    // println!("\n\n{:?}\n\n", metre);
+    println!("\n\n{:?}\n\n", metre);
 }

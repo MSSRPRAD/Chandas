@@ -9,6 +9,67 @@ use crate::data::{VrttaData, StringOrList, Vrtta};
 use crate::utils::{MatchTracker, PatternMatch, MatchType, IdentifyParams, Input, Params, SearchParams::{MergedSearch, ExactSearch, ExtraSearch}};
 // use crate::scheme::Me
 
+fn scheme_exists(scheme: &Option<String>) -> bool {
+    scheme.is_some()
+}
+
+pub fn check_individual_match(input: Input, metre: Vrtta) -> Vec<PatternMatch> {
+    let actual = get_actual(metre.clone().pattern);
+    let mut matches: Vec<PatternMatch> = Vec::new();
+    let match_types = vec![MatchType::IndividualPadaOne,
+                           MatchType::IndividualPadaTwo,
+                           MatchType::IndividualPadaThree,
+                           MatchType::IndividualPadaFour];
+    if scheme_exists(&input.SchemeOne) {
+        matches.push(
+            PatternMatch {
+                metre: metre.clone(),
+                match_type: match_types[0],
+                quality: 1.0 - levenshtein(&input.SchemeOne.clone().unwrap(), &actual[0]) as f64 / input.SchemeOne.unwrap().len() as f64
+            }
+        )
+    }
+    if scheme_exists(&input.SchemeTwo) {
+        matches.push(
+            PatternMatch {
+                metre: metre.clone(),
+                match_type: match_types[1],
+                quality: 1.0 - levenshtein(&input.SchemeTwo.clone().unwrap(), &actual[1]) as f64 / input.SchemeTwo.unwrap().len() as f64
+            }
+        )
+    }
+if scheme_exists(&input.SchemeThree) {
+        matches.push(
+            PatternMatch {
+                metre: metre.clone(),
+                match_type: match_types[2],
+                quality: 1.0 - levenshtein(&input.SchemeThree.clone().unwrap(), &actual[2])  as f64 / input.SchemeThree.unwrap().len() as f64
+            }
+        )
+    }
+if scheme_exists(&input.SchemeFour) {
+        matches.push(
+            PatternMatch {
+                metre: metre.clone(),
+                match_type: match_types[3],
+                quality: 1.0 - levenshtein(&input.SchemeFour.clone().unwrap(), &actual[3]) as f64 / input.SchemeFour.unwrap().len() as f64
+            }
+        )
+    }
+    matches
+}
+
+pub fn check_whole_match(input: Input, metre: Vrtta) -> PatternMatch {
+    let actual = get_actual(metre.clone().pattern).concat();
+    let distance = levenshtein(&actual, &input.SchemeAll.unwrap()) as f64;
+    let quality = 1.0 - distance/(actual.len() as f64);
+    PatternMatch {
+        metre: metre,
+        match_type: MatchType::WholePada,
+        quality: quality,
+    }
+}
+
 fn get_actual(string_or_list: StringOrList) -> Vec<String> {
     match string_or_list {
         StringOrList::String(s) => vec![s; 4], // Repeat the string four times
@@ -38,9 +99,26 @@ pub fn identify_vrtta(
     let mut tracker = MatchTracker::new(3);
     // matches = PatternMatch;
     for metre in vrtta_data.metres {
-        // Find the quality
-        println!("Metre Name: {}", metre.name);
-        println!("Pattern: {:?}", metre.pattern);
+        // Find the qualities
+        // Add the IndividualPada Match
+        let ind_pada_res = check_individual_match(input.clone(),metre.clone());
+        let match_types = vec![MatchType::IndividualPadaOne,
+                               MatchType::IndividualPadaTwo,
+                               MatchType::IndividualPadaThree,
+                               MatchType::IndividualPadaFour];
+        for (match_type, pattern_match) in match_types.into_iter().zip(ind_pada_res.into_iter()){
+            tracker.add_match(match_type, pattern_match);
+        }
+        // Add the WholePattern Match
+        tracker.add_match(
+            MatchType::WholePada,
+            check_whole_match(
+                input.clone(),
+                metre.clone(),
+            )
+        );
+        // println!("Metre Name: {}", metre.name);
+        // println!("Pattern: {:?}", metre.pattern);
     }
     return tracker;
 }

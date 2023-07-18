@@ -19,9 +19,19 @@ use std::collections::HashMap;
 
 #[derive(Debug)]
 pub struct PatternMatch {
-    pub pattern: Vrtta,
+    pub metre: Vrtta,
     pub match_type: MatchType,
-    pub quality: u32,
+    pub quality: f64,
+}
+
+impl PatternMatch {
+    pub fn new(metre: Vrtta, match_type: MatchType, quality: f64) -> PatternMatch {
+        PatternMatch {
+            metre,
+            match_type,
+            quality
+        }
+    }
 }
 
 impl PartialEq for PatternMatch {
@@ -34,25 +44,27 @@ impl Eq for PatternMatch {}
 
 impl PartialOrd for PatternMatch {
     fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
-        Some(other.quality.cmp(&self.quality)) // Reverse the ordering for a max heap
+        // To create a max heap, we need to reverse the ordering.
+        other.quality.partial_cmp(&self.quality)
     }
 }
 
 impl Ord for PatternMatch {
     fn cmp(&self, other: &Self) -> Ordering {
-        self.partial_cmp(other).unwrap()
+        // The same as in PartialOrd, but directly using cmp method for a total order.
+        other.quality.partial_cmp(&self.quality).unwrap()
     }
 }
-
-#[derive(Debug, PartialEq, Eq, Hash)]
+#[derive(Debug, PartialEq, Eq, Hash, Copy, Clone)]
 pub enum MatchType {
-    IndividualPada,
-    FirstTwo,
-    LastTwo,
-    FirstTwoAndLastTwo,
-    WholePattern,
+    IndividualPadaOne,
+    IndividualPadaTwo,
+    IndividualPadaThree,
+    IndividualPadaFour,
+    WholePada,
 }
 
+#[derive(Debug)]
 pub struct MatchTracker {
     pub matches: HashMap<MatchType, Vec<PatternMatch>>,
     pub max_matches: usize,
@@ -70,7 +82,7 @@ impl MatchTracker {
         let matches = self.matches.entry(match_type).or_insert(Vec::new());
 
         matches.push(match_instance);
-        matches.sort_unstable_by(|a, b| b.quality.cmp(&a.quality));
+        matches.sort_unstable_by(|a, b| b.quality.partial_cmp(&a.quality).unwrap());
         while matches.len() > self.max_matches {
             matches.pop();
         }
@@ -93,6 +105,7 @@ pub struct Input {
 }
 
 impl Input {
+
     pub fn new(input_string: &str) -> Input {
         let lines: Vec<&str> = input_string.lines().collect();
         let mut input = Input {
