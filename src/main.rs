@@ -1,23 +1,19 @@
 //// Main Function
+pub mod data;
 mod format;
 mod identify;
 mod process;
 mod scheme;
 pub mod utils;
-pub mod data;
-use crate::identify::{
-    identify_vrtta,
-};
-use crate::data::{
-    read_json_vrtta, VrttaData, read_json_matra, MatraData,
-};
-use crate::utils::{
-    Input, SearchParams::{MergedSearch, ExactSearch, ExtraSearch}, IdentifyParams, Params,
-};
+use crate::data::{read_json_matra, read_json_vrtta, MatraData, VrttaData};
+use crate::identify::{identify_anushtup, identify_vrtta};
+use crate::utils::{IdentifyParams, Input, Params};
 fn main() {
     //Input Verse in slp1 encoding
-    let verse = "asty uttarasyAM diSi devatAtmA himAlayo nAma nagADirAjaH .
-pUrvAparO toyaniDI vigAhya sTitaH pfTivyA iva mAnadaRqaH ..";
+    let verse = "tasya tvevaM praBAvasya
+DarmajYasya mahAtmanaH .
+sutArTaM tapyamAnasya
+nAsIdvaMSakaraH sutaH .. 1 ..";
 
     //Print the input verse
     println!("\nInput Verse:\n{}\n\n", verse);
@@ -26,13 +22,10 @@ pUrvAparO toyaniDI vigAhya sTitaH pfTivyA iva mAnadaRqaH ..";
     let input = Input::new(verse);
     println!("{:?}", input);
 
-    let params = Params::new(
-        IdentifyParams::IdentifyVrtta,
-        vec![MergedSearch, ExactSearch, ExtraSearch]
-    );
+    let params = Params::new(IdentifyParams::IdentifyAnushtup);
 
     let vrtta_data = read_json_vrtta();
 
-    let metre = identify_vrtta(input, vrtta_data, params);
+    let metre = identify_anushtup(input, vrtta_data, params);
     println!("\n\n{:?}\n\n", metre);
 }

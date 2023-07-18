@@ -1,0 +1,16 @@
+
+Input Verse:
+asty uttarasyAM diSi devatAtmA himAlayo nAma nagADirAjaH .
+pUrvAparO toyaniDI vigAhya sTitaH pfTivyA iva mAnadaRqaH ..
+
+
+Input { PadaOne: Some("astyuttarasyAMdiSidevatAtmAhimAlayonAmanagADirAjaH"), PadaTwo: Some("pUrvAparOtoyaniDIvigAhyasTitaHpfTivyAivamAnadaRqaH"), PadaThree: None, PadaFour: None, SchemeOne: Some("GGLGGLLGLGGLGLGGLLGLGG"), SchemeTwo: Some("GGLGGLLGLGGLGLGGLLGLGG"), SchemeThree: None, SchemeFour: None, SchemeOneTwo: Some("GGLGGLLGLGGLGLGGLLGLGGGGLGGLLGLGGLGLGGLLGLGG"), SchemeThreeFour: None, SchemeAll: Some("GGLGGLLGLGGLGLGGLLGLGGGGLGGLLGLGLLGLGGLLGLGG") }
+No of vrtta metres in the database: 
+1349
+
+
+
+
+MatchTracker { matches: {IndividualPadaTwo: [PatternMatch { metre: Vrtta { name: "kaṅkaṇakvāṇaḥ", pattern: String("GLGGLGGLGGLGGLGGLGGLGG") }, match_type: IndividualPadaTwo, quality: 0.8181818181818181 }, PatternMatch { metre: Vrtta { name: "bhujaṅgaḥ", pattern: String("LGGLGGLGGLGGLGGLGGLGGLGG") }, match_type: IndividualPadaTwo, quality: 0.8181818181818181 }, PatternMatch { metre: Vrtta { name: "vīranīrājanā", pattern: String("LGGLGGLGGLGGGLGGLGGLGG") }, match_type: IndividualPadaTwo, quality: 0.8181818181818181 }], WholePada: [PatternMatch { metre: Vrtta { name: "bhadrā", pattern: List(["GGLGGLLGLGG", "LGLGGLLGLGG"]) }, match_type: WholePada, quality: 0.9772727272727273 }, PatternMatch { metre: Vrtta { name: "ākhyānakī", pattern: List(["GGLGGLLGLGG", "LGLGGLLGLGG"]) }, match_type: WholePada, quality: 0.9772727272727273 }, PatternMatch { metre: Vrtta { name: "vāṇī", pattern: List(["GGLGGLLGLGG", "LGLGGLLGLGG", "GGLGGLLGLGG", "GGLGGLLGLGG"]) }, match_type: WholePada, quality: 0.9545454545454546 }], IndividualPadaOne: [PatternMatch { metre: Vrtta { name: "kaṅkaṇakvāṇaḥ", pattern: String("GLGGLGGLGGLGGLGGLGGLGG") }, match_type: IndividualPadaOne, quality: 0.8181818181818181 }, PatternMatch { metre: Vrtta { name: "bhujaṅgaḥ", pattern: String("LGGLGGLGGLGGLGGLGGLGGLGG") }, match_type: IndividualPadaOne, quality: 0.8181818181818181 }, PatternMatch { metre: Vrtta { name: "vīranīrājanā", pattern: String("LGGLGGLGGLGGGLGGLGGLGG") }, match_type: IndividualPadaOne, quality: 0.8181818181818181 }]}, max_matches: 3 }
+
+

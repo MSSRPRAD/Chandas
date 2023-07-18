@@ -29,7 +29,7 @@ impl PatternMatch {
         PatternMatch {
             metre,
             match_type,
-            quality
+            quality,
         }
     }
 }
@@ -61,6 +61,8 @@ pub enum MatchType {
     IndividualPadaTwo,
     IndividualPadaThree,
     IndividualPadaFour,
+    PadaOneTwo,
+    PadaThreeFour,
     WholePada,
 }
 
@@ -105,7 +107,6 @@ pub struct Input {
 }
 
 impl Input {
-
     pub fn new(input_string: &str) -> Input {
         let lines: Vec<&str> = input_string.lines().collect();
         let mut input = Input {
@@ -175,27 +176,13 @@ pub enum IdentifyParams {
 }
 
 #[derive(Debug)]
-pub enum SearchParams {
-    MergedSearch,
-    ExactSearch,
-    ExtraSearch,
-}
-
-#[derive(Debug)]
 pub struct Params {
     pub identify_params: IdentifyParams,
-    pub search_params: Vec<SearchParams>,
 }
 
 impl Params {
-    pub fn new(
-        identify_params: IdentifyParams,
-        search_params: Vec<SearchParams>,
-    ) -> Params {
-        Params {
-            identify_params,
-            search_params,
-        }
+    pub fn new(identify_params: IdentifyParams) -> Params {
+        Params { identify_params }
     }
 }
 
