@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+<script src="{{ url_for('static', filename='script.js') }}" type="module"></script>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SanskritMetresRust</title>
-    <link rel="stylesheet" href="style.css">
     <style>
         .response-column {
             display: inline-block;
@@ -30,6 +30,15 @@
     <div id="metre-board">
         <form id="inputForm">
             <textarea id="inputData" name="inputData" rows="10" cols="50" placeholder="Enter your data here"></textarea>
+            <select id="t1-select">
+                <option value="devanagari">devanagari</option>
+                <option value="telugu">telugu</option>
+                <option value="kannada">kannada</option>
+		        <option value="hk">hk</option>
+                <option value="itrans">itrans</option>
+                <option value="iast">iast</option>
+                <option value="slp1">slp1</option>
+            </select>
             <button type="button" id="submitBtn">Submit</button>
         </form>
         <div id="responseDiv">
@@ -49,29 +58,6 @@
     </div>
 
     <script>
-        document.getElementById('submitBtn').addEventListener('click', function() {
-            const inputData = document.getElementById('inputData').value;
-
-            fetch('/api', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ inputData: inputData })
-            })
-            .then(response => response.json())
-            .then(data => {
-                const matraContent = document.getElementById('matraContent');
-                matraContent.innerText = data.matra;
-                
-                const vrttaContent = document.getElementById('vrttaContent');
-                vrttaContent.innerText = data.vrtta;
-                
-                const anushtupContent = document.getElementById('anushtupContent');
-                anushtupContent.innerText = data.anushtup;
-            })
-            .catch(error => console.error('Request failed:', error));
-        });
     </script>
 </body>
 </html>
