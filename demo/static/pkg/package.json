@@ -1,0 +1,17 @@
+{
+  "name": "transliterate-ferris-wasm",
+  "collaborators": [
+    "MSSRPRAD <pradyumna.malladi2003@gmail.com>"
+  ],
+  "version": "0.1.0",
+  "files": [
+    "transliterate_ferris_wasm_bg.wasm",
+    "transliterate_ferris_wasm.js",
+    "transliterate_ferris_wasm.d.ts"
+  ],
+  "module": "transliterate_ferris_wasm.js",
+  "types": "transliterate_ferris_wasm.d.ts",
+  "sideEffects": [
+    "./snippets/*"
+  ]
+}
