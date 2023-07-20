@@ -20,6 +20,7 @@ cargo run --release;
 ```
 virtualenv venv;
 . venv/bin/activate.fish;
+pip install maturin;
 maturin develop;
 python;
 >>> import chandas
